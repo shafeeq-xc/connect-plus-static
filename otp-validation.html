@@ -1,0 +1,169 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+ <!--Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-116678530-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'UA-116678530- 1');
+    </script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0 , maximum-scale=1, user-scalable=no">
+   <title>Recruitment agency | business consultant | Calicut| Osprey International</title>
+    <link rel="shortcut icon" type="image/png" href="images/favicon.png" />
+    <link href="css/style.css" rel="stylesheet" type="text/css" />
+    <link href="https://use.fontawesome.com/releases/v5.0.4/css/all.css" rel="stylesheet">
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <!-- PAGE STYLES -->
+    <link href="css/icons.css" rel="stylesheet" type="text/css" />
+    <!-- PAGE STYLES -->
+</head>
+<body>
+    <div class="page">
+        <!-- 01 - HEADER BEGINS-->
+        <!--HEADER ENDS-->
+        <div class="registration-page">
+            <div class="registration-head otp-right">
+                <p>
+                    Enter OTP Sent to Your Registred Mobile Number</p>
+            </div>
+            <div class="form-right otp-right">
+                <div id="msform">
+                    <div class="registration-steps-forms">
+                        <div class="forms-inputs-main">
+                         <span class="OTP_msg" id="msgName"><i class="fa fa-close"></i>Entered OTP is Invalid</span>
+                            <div class="form-input-group input-group-left-32 otp-input">
+                                <label>
+                                    Enter Otp</label>
+                                <input type="text" name="" id="txtOTP" />
+                            </div>
+                            <div class="clear">
+                            </div>
+                        </div>
+                        <button class="register-next-btn" id="btnResend">
+                            Resend OTP</button>
+                        <!--<a href="password.html">-->
+                        <button class="register-next-btn" id="btnSubmit">
+                            Submit</button>
+                        <!--</a>-->
+                    </div>
+                </div>
+            </div>
+            <div class="clear">
+            </div>
+        </div>
+    </div>
+    <!-- PAGE END SHERE -->
+    <!-- 08. JOB SECTION ENDS-->
+    <!-- *************   ALL SCRIPTS HERE  ************** -->
+    <!-- ***  MAIN SCRIPTS HERE *** -->
+    <!-- <script src="js/main_jQuery.js" type="text/javascript" charset="utf-8"></script>  -->
+    <!-- OFFLINE -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="js/menu.js"></script>
+    <script src="js/header.js"></script>
+    <script src="js/popup.js"></script>
+    <!-- ***  MAIN SCRIPTS HERE *** -->
+    <script src="js/step-by-step.js"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js'></script>
+    <!-- PAGE SCRIPTS -->
+    <!-- *************   ALL SCRIPTS HERE  ************** -->
+    <script>
+        var UserID = 0;
+        var Result=0;
+        $(document).ready(function () {
+            $("#msgName").hide();
+
+            $("#btnSubmit").click(function () {
+                var Qstring = getQueryString();
+                UserID = Qstring.ID;
+                // var id = sessionStorage.getItem('Id');             
+                var OTP = $("#txtOTP").val();
+
+                $.ajax({
+                    type: "POST",
+                    url: "WebService/Osprey.svc/VerifyOTP",
+                    data: {
+                        format: 'json'
+                    },
+                    data: '{"UserId":"' + UserID + '","OTP": "' + OTP + '"}',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (Result) {
+                        // var data = JSON.parse(Result);
+                        Result = Result.result;
+                        //  alert(data.messageEN);
+                        if (Result == 1)
+                            window.location.href = "password.html?ID=" + UserID + "";
+                        else {
+                            $("#msgName").show();
+                            $("#txtOTP").val('');
+                        }
+
+                    },
+                    failure: function (response) {
+                        console.log(response);
+                    }
+                                ,
+                    error: function (error) {
+                        console.log(JSON.stringify(error));
+                    },
+                    complete: function () {
+                        // if (Result == 1)
+                        // window.location.href = "password.html?ID=" + UserID + "";
+                    }
+                })
+            })
+            $("#btnResend").click(function () {
+                $("#msgName").hide();
+                RequestOTP();
+            })
+
+        })
+        function RequestOTP() {
+
+            $.ajax({
+                type: "POST",
+                url: "WebService/Osprey.svc/RequestOTP",
+                data: {
+                    format: 'json'
+                },
+                data: '{"UserId":"' + UserID + '"}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (Result) {
+                  //  var data = JSON.parse(Result);
+                    //  sessionStorage.setItem('Id', UserID);
+                    alert(Result.otp);
+                    // console.log(data);
+                    //console.log(data.Object.messageAR);
+                },
+                failure: function (response) {
+                    console.log(response);
+                }
+                ,
+                error: function (error) {
+                   console.log(JSON.stringify(error));
+                },
+                complete: function () {
+                    //window.location.href = "otp-validation.html?ID=" + UserID + "";
+                }
+            })
+        }
+        function getQueryString(e) {
+
+            var sPageURL = window.location.search.substring(1);
+            var output = [];
+            var obj = {}
+            var Qstring = sPageURL.split('&');
+            for (var i = 0; i < Qstring.length; i++) {
+                var a = Qstring[i].split('=');
+                obj[a[0]] = a[1];
+            }
+            return obj;
+        }
+    </script>
+</body>
+</html>
